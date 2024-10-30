@@ -60,6 +60,42 @@
     </style>
 </head>
 <body>
-    
+    <div class="search-container">
+        <h2>Weather Search</h2>
+        <input type="text" placeholder="Enter city..." id="search" onkeypress="handleKeyPress(event)">
+        <button onclick="performSearch()">Search</button>
+        <div id="result" class="result"></div>
+    </div>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map; // Declare the map variable globally
+
+        async function performSearch() {
+            const query = document.getElementById("search").value;
+            if (!query) {
+                alert("Please enter a city.");
+                return;
+            }
+
+            const url = `https://yahoo-weather5.p.rapidapi.com/weather?location=${encodeURIComponent(query)}&format=json&u=f`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': '2a958699e9msh2f59ecf0ca97607p1f94e4jsn11a03d088c74',
+                    'x-rapidapi-host': 'yahoo-weather5.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                displayResult(data);
+                initializeMap(data.location.lat, data.location.long);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("result").textContent = "Error fetching data. Please try again later.";
+            }
+        }
 </body>
 </html>
