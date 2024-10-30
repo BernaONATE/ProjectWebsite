@@ -97,5 +97,21 @@
                 document.getElementById("result").textContent = "Error fetching data. Please try again later.";
             }
         }
+        function displayResult(data) {
+            const resultContainer = document.getElementById("result");
+            if (data && data.current_observation) {
+                const weatherData = data.current_observation;
+                resultContainer.innerHTML = `
+                    <div class="weather-info">
+                        <h3>Weather Information for ${data.location.city}</h3>
+                        <p><strong>Temperature:</strong> ${weatherData.condition.temperature}°F</p>
+                        <p><strong>Humidity:</strong> ${weatherData.atmosphere.humidity}%</p>
+                        <p><strong>Wind Speed:</strong> ${weatherData.wind.speed} mph</p>
+                    </div>
+                `;
+            } else {
+                resultContainer.innerHTML = "<p>No weather data available for the selected city.</p>";
+            }
+        }
 </body>
 </html>
