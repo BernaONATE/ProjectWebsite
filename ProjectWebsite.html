@@ -5,11 +5,12 @@
     <title>Weather Search</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
+        /* Full-page background */
         body {
             font-family: Arial, sans-serif;
             height: 100vh;
             margin: 0;
-            background-image: url('ProjectWebsite.jpg'); 
+            background-image: url('ProjectWebsite.jpg');
             background-size: cover; 
             background-position: center; 
             display: flex;
@@ -21,7 +22,7 @@
             padding: 20px;
             border-radius: 10px;
             z-index: 1000;
-            text-align: center; 
+            text-align: center;
         }
         input[type="text"] {
             padding: 10px;
@@ -66,11 +67,12 @@
         <button onclick="performSearch()">Search</button>
         <div id="result" class="result"></div>
     </div>
+
     <div id="map"></div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         let map; 
-
         async function performSearch() {
             const query = document.getElementById("search").value;
             if (!query) {
@@ -97,6 +99,7 @@
                 document.getElementById("result").textContent = "Error fetching data. Please try again later.";
             }
         }
+
         function displayResult(data) {
             const resultContainer = document.getElementById("result");
             if (data && data.current_observation) {
@@ -113,10 +116,29 @@
                 resultContainer.innerHTML = "<p>No weather data available for the selected city.</p>";
             }
         }
+
+        function initializeMap(lat, long) {
+            if (map) {
+                map.remove(); 
+            }
+            map = L.map('map').setView([lat, long], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+           
+            L.marker([lat, long]).addTo(map)
+                .bindPopup(`Location: ${lat.toFixed(2)}, ${long.toFixed(2)}`)
+                .openPopup();
+        }
+
         function handleKeyPress(event) {
             if (event.key === "Enter") {
                 performSearch();
             }
         }
+    </script>
 </body>
 </html>
